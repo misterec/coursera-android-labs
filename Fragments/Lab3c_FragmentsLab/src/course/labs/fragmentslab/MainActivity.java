@@ -1,9 +1,11 @@
 package course.labs.fragmentslab;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.FrameLayout;
 
 public class MainActivity extends Activity implements
 		FriendsFragment.SelectionListener {
@@ -12,6 +14,8 @@ public class MainActivity extends Activity implements
 
 	private FriendsFragment mFriendsFragment;
 	private FeedFragment mFeedFragment;
+    private FragmentManager mFragmentManager;
+	private FrameLayout mFriendsLayout, mFeedsLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +30,16 @@ public class MainActivity extends Activity implements
 			mFriendsFragment = new FriendsFragment();
 
 			//TODO 1 - add the FriendsFragment to the fragment_container
-			
-			
+            mFriendsLayout = (FrameLayout) findViewById(R.id.fragment_container);
+            //mFeedsLayout = (FrameLayout) findViewById(R.id.feed_frag);
+
+            mFragmentManager = getFragmentManager();
+
+            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.fragment_container, mFriendsFragment);
+            fragmentTransaction.commit();
+			Log.i(TAG, "the layout is single-pane");
+
 			
 
 		} else {
@@ -36,7 +48,9 @@ public class MainActivity extends Activity implements
 
 			mFeedFragment = (FeedFragment) getFragmentManager()
 					.findFragmentById(R.id.feed_frag);
+            getFragmentManager().beginTransaction().add(R.id.feed_frag, mFeedFragment);
 		}
+
 
 	}
 
@@ -65,7 +79,11 @@ public class MainActivity extends Activity implements
 		if (!isInTwoPaneMode()) {
 
 			//TODO 2 - replace the fragment_container with the FeedFragment
-			
+			FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, mFeedFragment);
+            fragmentTransaction.addToBackStack(null);
+
+            fragmentTransaction.commit();
 
 			
 
